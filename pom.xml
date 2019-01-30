@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.mpojeda84.mapr</groupId>
 	<artifactId>connected-car-mapr-to-firebase</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1.1-SNAPSHOT</version>
 	<name>connected-car-mapr-to-firebase</name>
 	<description>Spring Boot Project to write in firebase from a mapr cluster</description>
 

@@ -7,6 +7,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Map;
 
 
 @SpringBootApplication
@@ -22,13 +23,13 @@ public class Application {
 	void sendToFirebase(){
 		System.out.println("here");
 
-		List<CarDataDto> all = MapRDBDataAcess.loadAllFromMapRDB();
+		Map<String, String> all = MapRDBDataAcess.loadAllFromMapRDB();
 		all.forEach(this::restToFirebase);
 	}
 
-	private void restToFirebase(CarDataDto carDataDto){
+	private void restToFirebase(String key, String json){
 		RestTemplate restTemplate = new RestTemplate();
-		restTemplate.put("https://connected-car-3f879.firebaseio.com/cars/"+ carDataDto.getVin() +".json", carDataDto);
+		restTemplate.put("https://connected-car-3f879.firebaseio.com/cars/"+ key +".json", json);
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.mpojeda84.mapr.connectedcarmaprtofirebase;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.ojai.Document;
 import org.ojai.DocumentStream;
@@ -8,8 +9,10 @@ import org.ojai.store.DocumentStore;
 import org.ojai.store.DriverManager;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MapRDBDataAcess {
 
@@ -25,11 +28,11 @@ public class MapRDBDataAcess {
         System.out.println("Connection closed");
     }
 
-    public static List<CarDataDto> loadAllFromMapRDB() {
+    public static Map<String, String> loadAllFromMapRDB() {
 
         initializeMapRDBConnection();
 
-        List<CarDataDto> list = new LinkedList<>();
+        Map<String, String> cars = new HashMap<>();
         ObjectMapper mapper = new ObjectMapper();
 
         System.out.println("All Cars in table");
@@ -38,8 +41,9 @@ public class MapRDBDataAcess {
          stream.forEach(x -> {
              try {
                  System.out.println("Sending object: " + x.asJsonString());
-                 CarDataDto carDataDto = mapper.readValue(x.asJsonString(),CarDataDto.class);
-                 list.add(carDataDto);
+                 JsonNode node = mapper.readTree(x.asJsonString());
+                 String vin = node.get("vin").asText();
+                 cars.put(vin,x.asJsonString());
              } catch (IOException e) {
                  System.out.println("could not convert to car object, JSON: " + x.asJsonString());
                  e.printStackTrace();
@@ -50,7 +54,7 @@ public class MapRDBDataAcess {
 
         closeMapRDBConnection();
 
-        return list;
+        return cars;
     }
 
 }
