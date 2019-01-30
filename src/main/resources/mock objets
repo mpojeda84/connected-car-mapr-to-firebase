@@ -1,0 +1,1 @@
+insert /obd/car-data-transformed --value '{"_id":"1","vin": "JJKJ33JKJ333","make": "BMW","year": "2018","odometer": "32034","totalFuelEconomy": "17","bestFuelEconomy": "28","milesToday": "56","milesThisWeek": "340","highestSpeedToday": "74","highestSpeedThisWeek": "81","avgSpeed": "46","avgCommunitySpeed": "48"}'
