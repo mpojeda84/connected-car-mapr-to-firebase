@@ -28,7 +28,7 @@ public class MapRDBDataAcess {
         System.out.println("Connection closed");
     }
 
-    public static Map<String, String> loadAllFromMapRDB() {
+    public static Map<String, String> loadAllFromMapRDB(String table) {
 
         initializeMapRDBConnection();
 
@@ -36,7 +36,7 @@ public class MapRDBDataAcess {
         ObjectMapper mapper = new ObjectMapper();
 
         System.out.println("All Cars in table");
-        final DocumentStore store = connection.getStore("/obd/car-data-transformed");
+        final DocumentStore store = connection.getStore(table);
         final DocumentStream stream = store.find();
          stream.forEach(x -> {
              try {
