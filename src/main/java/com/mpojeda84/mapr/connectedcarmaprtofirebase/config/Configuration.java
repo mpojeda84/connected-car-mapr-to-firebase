@@ -1,4 +1,4 @@
-package com.mpojeda84.mapr.connectedcarmaprtofirebase;
+package com.mpojeda84.mapr.connectedcarmaprtofirebase.config;
 
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
@@ -19,10 +19,18 @@ public class Configuration {
                 .desc("Firebase URL") // ex: https://connected-car-3f879.firebaseio.com
                 .build();
 
+        final Option delay = Option.builder("d")
+                .required()
+                .longOpt("delay")
+                .hasArg()
+                .desc("Delay") // ex: https://connected-car-3f879.firebaseio.com
+                .build();
+
 
         final Options options = new Options();
         options.addOption(table);
         options.addOption(firebase);
+        options.addOption(delay);
         return options;
     }
 }

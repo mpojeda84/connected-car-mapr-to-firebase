@@ -1,4 +1,4 @@
-package com.mpojeda84.mapr.connectedcarmaprtofirebase;
+package com.mpojeda84.mapr.connectedcarmaprtofirebase.model;
 
 public class CarDataDto {
 
