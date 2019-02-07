@@ -5,6 +5,7 @@ import com.mpojeda84.mapr.connectedcarmaprtofirebase.Application;
 import com.mpojeda84.mapr.connectedcarmaprtofirebase.model.CarDataDto;
 import com.mpojeda84.mapr.connectedcarmaprtofirebase.data.MapRDBDataAcess;
 import com.mpojeda84.mapr.connectedcarmaprtofirebase.model.MessageDto;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -42,14 +43,14 @@ public class CarDataService {
     private void sendMessagesToFirebase(String vin, List<MessageDto> messagesDto) {
         System.out.println("Messages for vin " + vin + ": ");
         messagesDto.stream().forEach(System.out::println);
-//      RestTemplate restTemplate = new RestTemplate();
-//      restTemplate.put(Application.firebase + "/messages/"+ vin +".json", CarDataHelper.serialize(messagesDto));
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.put(Application.firebase + "/messages/"+ vin +".json", CarDataHelper.serialize(messagesDto));
     }
 
     private void sendToFirebase(CarDataDto carDataDto) {
         System.out.println(CarDataHelper.serialize(carDataDto));
-//        RestTemplate restTemplate = new RestTemplate();
-//        restTemplate.put(Application.firebase + "/cars/"+ carDataDto.getVin() +".json", CarDataHelper.serialize(carDataDto));
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.put(Application.firebase + "/cars/"+ carDataDto.getVin() +".json", CarDataHelper.serialize(carDataDto));
     }
 
     private Double findCommunityAverage(List<JsonNode> cars) {
