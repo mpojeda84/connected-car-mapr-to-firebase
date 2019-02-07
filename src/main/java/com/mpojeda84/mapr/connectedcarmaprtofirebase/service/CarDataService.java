@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.mpojeda84.mapr.connectedcarmaprtofirebase.Application;
 import com.mpojeda84.mapr.connectedcarmaprtofirebase.model.CarDataDto;
 import com.mpojeda84.mapr.connectedcarmaprtofirebase.data.MapRDBDataAcess;
-import org.springframework.web.client.RestTemplate;
+import com.mpojeda84.mapr.connectedcarmaprtofirebase.model.MessageDto;
 
 import java.util.List;
 
@@ -14,8 +14,17 @@ public class CarDataService {
     public void sendAllToFirebase(){
         System.out.println("Loding and Sending");
 
+        //open
+        MapRDBDataAcess.initializeMapRDBConnection();
+
         List<JsonNode> all = MapRDBDataAcess.loadAllFromMapRDB(Application.table);
         System.out.println("count:" + all.size());
+
+        List<JsonNode> messages = MapRDBDataAcess.loadAllMessagesFromMapRDB(Application.messagesTable);
+        System.out.println("messages count:" + messages.size());
+
+        //close
+        MapRDBDataAcess.closeMapRDBConnection();
 
         Double communityAverage = findCommunityAverage(all);
         all.stream()
@@ -25,6 +34,22 @@ public class CarDataService {
                     return x;
                 })
                 .forEach( this::sendToFirebase);
+
+        CarDataHelper.toMessagesMap(messages).forEach(this::sendMessagesToFirebase);
+
+    }
+
+    private void sendMessagesToFirebase(String vin, List<MessageDto> messagesDto) {
+        System.out.println("Messages for vin " + vin + ": ");
+        messagesDto.stream().forEach(System.out::println);
+//      RestTemplate restTemplate = new RestTemplate();
+//      restTemplate.put(Application.firebase + "/messages/"+ vin +".json", CarDataHelper.serialize(messagesDto));
+    }
+
+    private void sendToFirebase(CarDataDto carDataDto) {
+        System.out.println(CarDataHelper.serialize(carDataDto));
+//        RestTemplate restTemplate = new RestTemplate();
+//        restTemplate.put(Application.firebase + "/cars/"+ carDataDto.getVin() +".json", CarDataHelper.serialize(carDataDto));
     }
 
     private Double findCommunityAverage(List<JsonNode> cars) {
@@ -33,13 +58,4 @@ public class CarDataService {
         return speedTotal / speedDataPoints;
     }
 
-    private void sendToFirebase(CarDataDto carDataDto) {
-        System.out.println(CarDataHelper.serialize(carDataDto));
-        //this.restToFirebase(carDataDto.getVin(), CarDataHelper.serialize(carDataDto));
-    }
-
-    private void restToFirebase(String key, String json){
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.put(Application.firebase + "/cars/"+ key +".json", json);
-    }
 }

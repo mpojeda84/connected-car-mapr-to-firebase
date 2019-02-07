@@ -6,13 +6,13 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.ParseException;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.scheduling.annotation.EnableScheduling;
 
 
 @SpringBootApplication
 public class Application {
 
 	public static String table;
+	public static String messagesTable;
 	public static String firebase;
 	public static int delay = 200;
 
@@ -23,6 +23,7 @@ public class Application {
 		table = commandLine.getOptionValue("t");
 		firebase = commandLine.getOptionValue("f");
 		delay = Integer.parseInt(commandLine.getOptionValue("d"));
+		messagesTable = commandLine.getOptionValue("m");
 
 		System.out.println("table: " + table);
 		System.out.println("firebase: " + firebase);

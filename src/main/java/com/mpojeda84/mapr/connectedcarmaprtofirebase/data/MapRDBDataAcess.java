@@ -14,25 +14,12 @@ public class MapRDBDataAcess {
 
     private static Connection connection;
 
-    private static void initializeMapRDBConnection() {
-        connection = DriverManager.getConnection("ojai:mapr:");
-        System.out.println("Connection opened");
-    }
-
-    private static void closeMapRDBConnection() {
-        connection.close();
-        System.out.println("Connection closed");
-    }
-
     public static List<JsonNode> loadAllFromMapRDB(String table) {
-
-        initializeMapRDBConnection();
-
 
         List<JsonNode> cars = new LinkedList<>();
         ObjectMapper mapper = new ObjectMapper();
 
-        System.out.println("All Cars in table");
+        System.out.println("Loading cars");
         final DocumentStore store = connection.getStore(table);
         final DocumentStream stream = store.find();
 
@@ -49,10 +36,41 @@ public class MapRDBDataAcess {
          });
 
         store.close();
-
-        closeMapRDBConnection();
-
         return cars;
     }
+
+    public static List<JsonNode> loadAllMessagesFromMapRDB(String messagesTable) {
+
+        ObjectMapper mapper = new ObjectMapper();
+        List<JsonNode> messages = new LinkedList<>();
+
+        System.out.println("Loading cars");
+        final DocumentStore store = connection.getStore(messagesTable);
+        final DocumentStream stream = store. find();
+
+        stream.forEach(x -> {
+            try {
+                JsonNode node = mapper.readTree(x.asJsonString());
+                messages.add(node);
+            } catch (IOException e) {
+                System.out.println("could not convert to car object, JSON: " + x.asJsonString());
+                e.printStackTrace();
+            }
+        });
+
+        store.close();
+        return messages;
+    }
+
+    public static void initializeMapRDBConnection() {
+        connection = DriverManager.getConnection("ojai:mapr:");
+        System.out.println("Connection opened");
+    }
+
+    public static void closeMapRDBConnection() {
+        connection.close();
+        System.out.println("Connection closed");
+    }
+
 
 }

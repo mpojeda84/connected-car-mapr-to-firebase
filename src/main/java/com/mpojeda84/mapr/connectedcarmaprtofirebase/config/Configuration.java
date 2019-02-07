@@ -26,11 +26,19 @@ public class Configuration {
                 .desc("Delay") // ex: https://connected-car-3f879.firebaseio.com
                 .build();
 
+        final Option messagesTable = Option.builder("m")
+                .required()
+                .longOpt("messages")
+                .hasArg()
+                .desc("Messages") // ex: https://connected-car-3f879.firebaseio.com
+                .build();
+
 
         final Options options = new Options();
         options.addOption(table);
         options.addOption(firebase);
         options.addOption(delay);
+        options.addOption(messagesTable);
         return options;
     }
 }
