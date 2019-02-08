@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mpojeda84.mapr.connectedcarmaprtofirebase.model.CarDataDto;
 import com.mpojeda84.mapr.connectedcarmaprtofirebase.model.MessageDto;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,6 +14,8 @@ import java.util.Map;
 
 
 public class CarDataHelper {
+
+    static DecimalFormat decimalFormat = new DecimalFormat("###.#");
 
     static CarDataDto process(JsonNode node) {
 
@@ -31,10 +34,38 @@ public class CarDataHelper {
         carData.setAvgSpeed(node.get("avgSpeed").asText());
         carData.setAvgCommunitySpeed(node.get("maxSpeedLast7Days").asText());
 
+        return carData;
+    }
+
+    static CarDataDto normalizeAndFormat(CarDataDto carData) {
+
+        carData.setOdometer(roundAndFormat(carData.getOdometer()));
+        carData.setTotalFuelEconomy(prepareFuelEconomy(carData.getTotalFuelEconomy()));
+        carData.setBestFuelEconomy(prepareFuelEconomy(carData.getBestFuelEconomy()));
+
+        carData.setMilesThisWeek(roundAndFormat(carData.getMilesThisWeek()));
+        carData.setMilesToday(roundAndFormat(carData.getMilesToday()));
+        carData.setHighestSpeedThisWeek(roundAndFormat(carData.getHighestSpeedThisWeek()));
+        carData.setHighestSpeedToday(roundAndFormat(carData.getHighestSpeedToday()));
+
+        carData.setAvgSpeed(roundAndFormat(carData.getAvgSpeed()));
+        carData.setAvgCommunitySpeed(roundAndFormat(carData.getAvgCommunitySpeed()));
 
         return carData;
     }
 
+    public static String roundAndFormat(String value) {
+        try {
+            Double doubleValue = Double.parseDouble(value);
+            return decimalFormat.format(doubleValue);
+        }
+        catch (Exception e) {System.out.println("could not convert to Double:" + value);return  value;}
+    }
+
+    private static String prepareFuelEconomy(String fuelEconomy) {
+        try{return roundAndFormat(Double.toString (Double.parseDouble(fuelEconomy) / 35));}
+        catch (Exception e) {System.out.println("could not convert to Double:" + fuelEconomy);return  fuelEconomy;}
+    }
 
 
     private static String difference(String max, String min) {

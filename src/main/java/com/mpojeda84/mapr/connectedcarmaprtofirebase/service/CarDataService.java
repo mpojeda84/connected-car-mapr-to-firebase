@@ -30,8 +30,9 @@ public class CarDataService {
         Double communityAverage = findCommunityAverage(all);
         all.stream()
                 .map(CarDataHelper::process)
+                .map(CarDataHelper::normalizeAndFormat)
                 .map(x -> {
-                    x.setAvgCommunitySpeed(communityAverage.toString());
+                    x.setAvgCommunitySpeed(CarDataHelper.roundAndFormat(communityAverage.toString()));
                     return x;
                 })
                 .forEach( this::sendToFirebase);
