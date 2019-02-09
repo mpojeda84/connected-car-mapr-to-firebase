@@ -32,7 +32,7 @@ public class CarDataService {
                 .map(CarDataHelper::process)
                 .map(CarDataHelper::normalizeAndFormat)
                 .map(x -> {
-                    x.setAvgCommunitySpeed(CarDataHelper.roundAndFormat(communityAverage.toString()));
+                    x.setAvgCommunitySpeed(CarDataHelper.toInt(communityAverage.toString()));
                     return x;
                 })
                 .forEach( this::sendToFirebase);

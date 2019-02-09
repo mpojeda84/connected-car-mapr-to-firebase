@@ -39,12 +39,12 @@ public class CarDataHelper {
 
     static CarDataDto normalizeAndFormat(CarDataDto carData) {
 
-        carData.setOdometer(roundAndFormat(carData.getOdometer()));
+        carData.setOdometer(toInt(carData.getOdometer()));
         carData.setTotalFuelEconomy(prepareFuelEconomy(carData.getTotalFuelEconomy()));
         carData.setBestFuelEconomy(prepareFuelEconomy(carData.getBestFuelEconomy()));
 
-        carData.setMilesThisWeek(roundAndFormat(carData.getMilesThisWeek()));
-        carData.setMilesToday(roundAndFormat(carData.getMilesToday()));
+        carData.setMilesThisWeek(toInt(carData.getMilesThisWeek()));
+        carData.setMilesToday(toInt(carData.getMilesToday()));
         carData.setHighestSpeedThisWeek(roundAndFormat(carData.getHighestSpeedThisWeek()));
         carData.setHighestSpeedToday(roundAndFormat(carData.getHighestSpeedToday()));
 
@@ -52,6 +52,14 @@ public class CarDataHelper {
         carData.setAvgCommunitySpeed(roundAndFormat(carData.getAvgCommunitySpeed()));
 
         return carData;
+    }
+
+    public static String toInt(String value) {
+        try {
+            Double doubleValue = Double.parseDouble(value);
+            return Integer.toString(doubleValue.intValue());
+        }
+        catch (Exception e) {System.out.println("could not convert to Double:" + value);return  value;}
     }
 
     public static String roundAndFormat(String value) {
@@ -63,7 +71,7 @@ public class CarDataHelper {
     }
 
     private static String prepareFuelEconomy(String fuelEconomy) {
-        try{return roundAndFormat(Double.toString (Double.parseDouble(fuelEconomy) / 35));}
+        try{return toInt(Double.toString (Double.parseDouble(fuelEconomy) / 35));}
         catch (Exception e) {System.out.println("could not convert to Double:" + fuelEconomy);return  fuelEconomy;}
     }
 
